@@ -12,7 +12,7 @@ import {
 import { CategoryValidationPipe } from 'src/pipes/category-validation.pipe';
 import { IdValidationPipe } from 'src/pipes/id-validation.pipe';
 import { PaginationParams } from 'src/utils/pagination-params';
-import { CreateQuestionDto, UpdateQuestionDto } from './dto/questions.dto';
+import { CreateQuestionDto, UpdateQuestionDto } from './dto/question.dto';
 import { QUESTION_NOT_FOUND_ERROR } from './questions.constants';
 import { QuestionsService } from './questions.service';
 

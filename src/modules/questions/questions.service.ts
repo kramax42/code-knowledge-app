@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ModelType } from '@typegoose/typegoose/lib/types';
 import { categories } from 'src/constants/categories.constants';
-import { CreateQuestionDto, UpdateQuestionDto } from './dto/questions.dto';
+import { CreateQuestionDto, UpdateQuestionDto } from './dto/question.dto';
 import { QuestionModel } from './question.model';
 
 @Injectable()

@@ -5,6 +5,7 @@ import {
   IsArray,
   IsBoolean,
   IsOptional,
+  IsEnum,
 } from 'class-validator';
 
 class AnswerDto {
@@ -15,8 +16,14 @@ class AnswerDto {
   isCorrect: boolean;
 }
 
+export enum Categories {
+  JAVASCRIPT = 'javascript',
+  TYPESCRIPT = 'typescript',
+  NODEJS =     'nodejs',
+}
+
 export class CreateQuestionDto {
-  @IsString()
+  @IsEnum(Categories)
   category: string;
 
   @IsString()

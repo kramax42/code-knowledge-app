@@ -17,7 +17,7 @@ export class AuthService {
   async createUser(dto: AuthDto) {
     const salt = await genSalt(10);
     const newUser = new this.userModel({
-      email: dto.login,
+      email: dto.email,
       passwordHash: await hash(dto.password, salt),
     });
     return newUser.save();
