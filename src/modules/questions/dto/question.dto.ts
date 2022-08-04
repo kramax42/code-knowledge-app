@@ -30,6 +30,7 @@ export class CreateQuestionDto {
   question: string;
 
   @IsString()
+  @IsOptional()
   codeExample: string;
 
   @IsArray()

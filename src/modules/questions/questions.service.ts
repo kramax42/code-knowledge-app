@@ -9,22 +9,20 @@ import { QuestionModel } from './question.model';
 export class QuestionsService {
   constructor(
     @InjectModel(QuestionModel.name)
-    private readonly questionModel: ModelType<QuestionModel>,
-    
-  ) {}
+    private readonly questionModel: ModelType<QuestionModel> ) {}
 
   async findAll(
     category: string,
-    documentsToSkip = 0,
-    limitOfDocuments?: number,
+    skip = 0,
+    limit?: number,
   ) {
     const findQuery = this.questionModel
       .find({ category })
       .sort({ _id: 1 })
-      .skip(documentsToSkip);
+      .skip(skip);
 
-    if (limitOfDocuments) {
-      findQuery.limit(limitOfDocuments);
+    if (limit) {
+      findQuery.limit(limit);
     }
 
     const results = await findQuery;
