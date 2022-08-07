@@ -8,10 +8,12 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CategoryValidationPipe } from 'src/pipes/category-validation.pipe';
 import { IdValidationPipe } from 'src/pipes/id-validation.pipe';
 import { PaginationParams } from 'src/utils/pagination-params';
+import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CreateQuestionDto, UpdateQuestionDto } from './dto/question.dto';
 import { QUESTION_NOT_FOUND_ERROR } from './questions.constants';
 import { QuestionsService } from './questions.service';
@@ -20,7 +22,7 @@ import { QuestionsService } from './questions.service';
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get(':category')
   async findAll(
   @Param('category', CategoryValidationPipe) category: string,
