@@ -2,9 +2,13 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
+  Get,
   HttpCode,
   Post,
+  Req,
   Res,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -13,6 +17,8 @@ import { ALREADY_REGISTERED_ERROR } from './auth.constants';
 import { AuthService } from './auth.service';
 import { SignUpDto, SignInDto } from './dto/auth.dto';
 import { Response } from 'express';
+import { JwtAuthGuard } from './guards/jwt.guard';
+import { RequestWithUser } from './interfaces/request-with-user';
 
 @Controller('auth')
 export class AuthController {
@@ -36,5 +42,20 @@ export class AuthController {
     const { cookie, accessToken } = await this.authService.getCookieAndToken(email);
     res.setHeader('Set-Cookie', cookie);
     res.send(accessToken);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('log-out')
+  async logOut(@Req() request: RequestWithUser, @Res() response: Response) {
+    response.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
+    return response.sendStatus(200);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async authMe(@Req() request: RequestWithUser) {
+    const user = request.user
+    const { accessToken } = await this.authService.getCookieAndToken(user.email);
+    return { user, accessToken };
   }
 }
