@@ -22,7 +22,7 @@ import { QuestionsService } from './questions.service';
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get(':category')
   async findAll(
   @Param('category', CategoryValidationPipe) category: string,
@@ -41,7 +41,7 @@ export class QuestionsController {
     return sizes;
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('create')
   async create(@Body() dto: CreateQuestionDto) {
     return this.questionsService.create(dto);
@@ -57,7 +57,7 @@ export class QuestionsController {
     return question;
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async delete(@Param('id', IdValidationPipe) id: string) {
     const deletedQuestion = await this.questionsService.deleteById(id);
@@ -66,7 +66,7 @@ export class QuestionsController {
     }
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async patch(
   @Param('id', IdValidationPipe) id: string,

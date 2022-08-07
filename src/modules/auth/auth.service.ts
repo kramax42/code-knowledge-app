@@ -41,7 +41,7 @@ export class AuthService {
     if (!isCorrectPassword) {
       throw new UnauthorizedException(WRONG_PASSWORD_ERROR);
     }
-    return { email: user.email };
+    return { email: user.email};
   }
 
   async getAccessToken(email: string) {
