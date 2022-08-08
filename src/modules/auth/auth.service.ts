@@ -58,7 +58,7 @@ export class AuthService {
   async getCookieAndToken(email: string) {
     const { accessToken } = await this.getAccessToken(email);
     // const cookie = `Authorization=Bearer ${accessToken}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`;
-    const cookie = `Authorization=Bearer ${accessToken}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`;
+    const cookie = `Authorization=Bearer ${accessToken}; HttpOnly; SameSite=None; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`;
     return {
       cookie,
       accessToken,
