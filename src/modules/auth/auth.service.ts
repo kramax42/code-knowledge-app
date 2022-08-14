@@ -67,6 +67,6 @@ export class AuthService {
 
 
   getCookieForLogOut() {
-    return `Authorization=; HttpOnly; Path=/; Max-Age=0`;
+    return `Authorization=; HttpOnly; SameSite=None; Secure; Path=/; Max-Age=0`;
   }
 }
