@@ -1,4 +1,4 @@
-import { buildSchema, prop } from '@typegoose/typegoose';
+import { buildSchema, modelOptions, prop } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 
 class Answer {
@@ -10,6 +10,21 @@ class Answer {
 }
 
 export interface QuestionModel extends Base { }
+
+@modelOptions({
+  schemaOptions: {
+    // collection: 'questions',
+    timestamps: true,
+    versionKey: false,
+    toJSON: {
+      transform: (doc, ret) => {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+      }
+    }
+  }
+})
 export class QuestionModel extends TimeStamps {
   @prop()
   category: string;
