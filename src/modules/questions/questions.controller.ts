@@ -42,7 +42,7 @@ export class QuestionsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('create')
+  @Post()
   async create(@Body() dto: CreateQuestionDto) {
     return this.questionsService.create(dto);
   }
