@@ -14,7 +14,7 @@ async function bootstrap() {
 
   // Explanation of problem with CORS.
   // https://tutorialmeta.com/question/nest-js-is-giving-cors-error-even-when-cors-is-enabled
-  let whitelist = ['http://localhost:3000', 'https://test-code-knowledge.vercel.app', , 'https://codeteko.vercel.app'];
+  let whitelist = ['http://localhost:3000', 'https://test-code-knowledge.vercel.app', 'https://codeteko.vercel.app'];
   app.enableCors({
     origin: function (origin, callback) {
       if (whitelist.indexOf(origin) !== -1) {
