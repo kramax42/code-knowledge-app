@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { CategoryValidationPipe } from 'src/pipes/category-validation.pipe';
 import { IdValidationPipe } from 'src/pipes/id-validation.pipe';
-import { PaginationParams } from 'src/utils/pagination-params';
+import { PaginationParams, RandomQuestionsDto } from 'src/utils/pagination-params';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CreateQuestionDto, UpdateQuestionDto } from './dto/question.dto';
 import { QUESTION_NOT_FOUND_ERROR } from './questions.constants';
@@ -20,15 +20,23 @@ import { QuestionsService } from './questions.service';
 
 @Controller('questions')
 export class QuestionsController {
-  constructor(private readonly questionsService: QuestionsService) {}
+  constructor(private readonly questionsService: QuestionsService) { }
 
   // @UseGuards(JwtAuthGuard)
   @Get(':category')
   async findAll(
-  @Param('category', CategoryValidationPipe) category: string,
+    @Param('category', CategoryValidationPipe) category: string,
     @Query() { skip, limit }: PaginationParams,
   ) {
     return this.questionsService.findAll(category, skip, limit);
+  }
+
+  @Get('random/:category')
+  async findRandom(
+    @Param('category', CategoryValidationPipe) category: string,
+    @Query() { limit }: RandomQuestionsDto,
+  ) {
+    return this.questionsService.findRandom(category, limit);
   }
 
   // @UseGuards(JwtAuthGuard)
@@ -69,7 +77,7 @@ export class QuestionsController {
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async patch(
-  @Param('id', IdValidationPipe) id: string,
+    @Param('id', IdValidationPipe) id: string,
     @Body() dto: UpdateQuestionDto,
   ) {
     const updatedQuestion = await this.questionsService.updateById(id, dto);
@@ -79,5 +87,5 @@ export class QuestionsController {
     return updatedQuestion;
   }
 
-  
+
 }

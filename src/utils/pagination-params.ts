@@ -14,3 +14,10 @@ export class PaginationParams {
   @Min(1)
   limit?: number;
 }
+
+export class RandomQuestionsDto {
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  limit: number;
+}

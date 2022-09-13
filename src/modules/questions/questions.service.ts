@@ -9,7 +9,7 @@ import { QuestionModel } from './question.model';
 export class QuestionsService {
   constructor(
     @InjectModel(QuestionModel.name)
-    private readonly questionModel: ModelType<QuestionModel> ) {}
+    private readonly questionModel: ModelType<QuestionModel>) { }
 
   async findAll(
     category: string,
@@ -30,6 +30,29 @@ export class QuestionsService {
     return results;
   }
 
+  async findRandom(
+    category: string,
+    limit: number,
+  ) {
+    // const findQuery = this.questionModel
+    //   .find({ category })
+    //   .sort({ _id: 1 })
+    //   .skip(skip);
+
+    const questions = await this.questionModel.aggregate([
+      { $match: { category } },
+      { $sample: { size: limit } }
+    ]).exec()
+
+    // if (limit) {
+    //   findQuery.limit(limit);
+    // }
+
+    // const results = await findQuery;
+
+    return questions;
+  }
+
   async create(dto: CreateQuestionDto) {
     return this.questionModel.create(dto);
   }
@@ -48,10 +71,10 @@ export class QuestionsService {
 
   async getCategoriesSizes() {
     const categoriesObj: Record<string, number> = {};
-    
+
     //https://advancedweb.hu/how-to-use-async-functions-with-array-map-in-javascript/
     await Promise.all(categories.map(async (category) => {
-      categoriesObj[category] = await this.questionModel.countDocuments({category});
+      categoriesObj[category] = await this.questionModel.countDocuments({ category });
     }))
     return categoriesObj;
   }
