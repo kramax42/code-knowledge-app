@@ -3,7 +3,7 @@ import { ModelType } from '@typegoose/typegoose/lib/types';
 import { genSalt, hash, compare } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { SignUpDto } from './dto/auth.dto';
-import { UserModel } from './user.model';
+import { User } from './user.model';
 import { USER_NOT_FOUND_ERROR, WRONG_PASSWORD_ERROR } from './auth.constants';
 import { InjectModel } from '@nestjs/mongoose';
 import { ConfigService } from '@nestjs/config';
@@ -11,7 +11,7 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(UserModel.name) private readonly userModel: ModelType<UserModel>,
+    @InjectModel(User.name) private readonly userModel: ModelType<User>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService
   ) { }
@@ -22,6 +22,7 @@ export class AuthService {
       email: dto.email,
       passwordHash: await hash(dto.password, salt),
     });
+    
     return newUser.save();
   }
 
@@ -32,7 +33,7 @@ export class AuthService {
   async validateUser(
     email: string,
     password: string,
-  ): Promise<Pick<UserModel, 'email'>> {
+  ): Promise<Pick<User, 'email'>> {
     const user = await this.findUser(email);
     if (!user) {
       throw new UnauthorizedException(USER_NOT_FOUND_ERROR);

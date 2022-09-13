@@ -6,8 +6,8 @@ export enum Role {
   USER = 'user',
 }
 
-export interface UserModel extends Base { };
-export class UserModel extends TimeStamps {
+export interface User extends Base { };
+export class User extends TimeStamps {
   @prop({ unique: true })
   email: string;
 
@@ -21,4 +21,4 @@ export class UserModel extends TimeStamps {
   passwordHash: string;
 }
 
-export const userSchema = buildSchema(UserModel);
+export const userSchema = buildSchema(User);

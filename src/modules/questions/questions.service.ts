@@ -3,13 +3,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ModelType } from '@typegoose/typegoose/lib/types';
 import { categories } from 'src/constants/categories.constants';
 import { CreateQuestionDto, UpdateQuestionDto } from './dto/question.dto';
-import { QuestionModel } from './question.model';
+import { Question } from './question.model';
 
 @Injectable()
 export class QuestionsService {
   constructor(
-    @InjectModel(QuestionModel.name)
-    private readonly questionModel: ModelType<QuestionModel>) { }
+    @InjectModel(Question.name)
+    private readonly questionModel: ModelType<Question>) { }
 
   async findAll(
     category: string,

@@ -9,7 +9,7 @@ class Answer {
   isCorrect: boolean;
 }
 
-export interface QuestionModel extends Base { }
+export interface Question extends Base { }
 
 @modelOptions({
   schemaOptions: {
@@ -25,7 +25,7 @@ export interface QuestionModel extends Base { }
     }
   }
 })
-export class QuestionModel extends TimeStamps {
+export class Question extends TimeStamps {
   @prop()
   category: string;
 
@@ -39,4 +39,4 @@ export class QuestionModel extends TimeStamps {
   answers: Answer[];
 }
 
-export const questionSchema = buildSchema(QuestionModel);
+export const questionSchema = buildSchema(Question);
