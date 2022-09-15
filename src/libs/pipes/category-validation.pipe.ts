@@ -4,7 +4,7 @@ import {
   Injectable,
   PipeTransform,
 } from '@nestjs/common';
-import { categories } from 'src/constants/categories.constants';
+import { categories } from 'src/libs/constants/categories.constants';
 import { CATEGORY_VALIDATION_ERROR } from './validation.constants';
 
 @Injectable()

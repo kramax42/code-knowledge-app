@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ModelType } from '@typegoose/typegoose/lib/types';
-import { categories } from 'src/constants/categories.constants';
+import { categories } from 'src/libs/constants/categories.constants';
 import { CreateQuestionDto, UpdateQuestionDto } from './dto/question.dto';
-import { Question } from './question.model';
+import { Question } from 'src/models/question.model';
 
 @Injectable()
 export class QuestionsService {
@@ -25,32 +25,22 @@ export class QuestionsService {
       findQuery.limit(limit);
     }
 
-    const results = await findQuery;
+    const foundQuestions = await findQuery;
 
-    return results;
+    return foundQuestions;
   }
 
   async findRandom(
     category: string,
     limit: number,
-  ) {
-    // const findQuery = this.questionModel
-    //   .find({ category })
-    //   .sort({ _id: 1 })
-    //   .skip(skip);
-
-    const questions = await this.questionModel.aggregate([
+  ): Promise<Question[]> {
+    const randomQuestions = await this.questionModel.aggregate([
       { $match: { category } },
       { $sample: { size: limit } }
     ]).exec()
 
-    // if (limit) {
-    //   findQuery.limit(limit);
-    // }
 
-    // const results = await findQuery;
-
-    return questions;
+    return randomQuestions;
   }
 
   async create(dto: CreateQuestionDto) {

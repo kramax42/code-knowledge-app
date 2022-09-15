@@ -7,16 +7,14 @@ import {
   HttpCode,
   Post,
   Req,
-  Res,
   UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-
 import { ALREADY_REGISTERED_ERROR } from './auth.constants';
 import { AuthService } from './auth.service';
 import { SignUpDto, SignInDto } from './dto/auth.dto';
-import { Response } from 'express';
+import { Request } from 'express';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { RequestWithUser } from './interfaces/request-with-user';
 
@@ -37,18 +35,18 @@ export class AuthController {
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
   @Post('sign-in')
-  async signIn(@Res() res: Response, @Body() { email, password }: SignInDto) {
+  async signIn(@Req() request: Request, @Body() { email, password }: SignInDto) {
     const { email: validatedEmail } = await this.authService.validateUser(email, password);
     const { cookie, accessToken } = await this.authService.getCookieAndToken(validatedEmail);
-    res.setHeader('Set-Cookie', cookie);
-    res.send(accessToken);
+    request.res.setHeader('Set-Cookie', cookie);
+    request.res.send(accessToken);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('log-out')
-  async logOut(@Req() request: RequestWithUser, @Res() response: Response) {
-    response.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
-    return response.sendStatus(200);
+  async logOut(@Req() request: RequestWithUser) {
+    request.res.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
+    request.res.sendStatus(200);
   }
 
   @UseGuards(JwtAuthGuard)

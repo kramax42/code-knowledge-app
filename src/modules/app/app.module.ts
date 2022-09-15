@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { MongooseModule } from '@nestjs/mongoose';
-import { getMongoConfig } from 'src/configs/mongo.config';
+import { getMongoConfig } from 'src/libs/configs/mongo.config';
 import { AuthModule } from '../auth/auth.module';
 import { QuestionsModule } from '../questions/questions.module';
 import { AppController } from './app.controller';

@@ -10,9 +10,9 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { CategoryValidationPipe } from 'src/pipes/category-validation.pipe';
-import { IdValidationPipe } from 'src/pipes/id-validation.pipe';
-import { PaginationParams, RandomQuestionsDto } from 'src/utils/pagination-params';
+import { CategoryValidationPipe } from 'src/libs/pipes/category-validation.pipe';
+import { IdValidationPipe } from 'src/libs/pipes/id-validation.pipe';
+import { PaginationParamsDto, RandomQuestionsDto } from 'src/libs/utils/pagination-params';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CreateQuestionDto, UpdateQuestionDto } from './dto/question.dto';
 import { QUESTION_NOT_FOUND_ERROR } from './questions.constants';
@@ -26,7 +26,7 @@ export class QuestionsController {
   @Get(':category')
   async findAll(
     @Param('category', CategoryValidationPipe) category: string,
-    @Query() { skip, limit }: PaginationParams,
+    @Query() { skip, limit }: PaginationParamsDto,
   ) {
     return this.questionsService.findAll(category, skip, limit);
   }
@@ -86,6 +86,4 @@ export class QuestionsController {
     }
     return updatedQuestion;
   }
-
-
 }
