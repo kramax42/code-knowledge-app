@@ -1,1 +1,11 @@
-export const categories = ['javascript', 'typescript', 'nodejs'];
+export const categories = [
+    'javascript',
+    'typescript',
+    'nodejs',
+    'cpp',
+    'go',
+    'c',
+    'git',
+    'sql',
+    'mongodb',
+];
