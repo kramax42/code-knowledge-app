@@ -2,8 +2,8 @@ import { buildSchema, prop } from '@typegoose/typegoose';
 import { TimeStamps, Base } from '@typegoose/typegoose/lib/defaultClasses';
 
 export enum Role {
-  ADMIN = 'admin',
-  USER = 'user',
+  Admin = 'admin',
+  User = 'user',
 }
 
 export interface User extends Base { };
@@ -14,7 +14,7 @@ export class User extends TimeStamps {
   @prop()
   name: string;
 
-  @prop({ type: String, enum: Role, default: Role.USER })
+  @prop({ type: String, enum: Role, default: Role.User })
   role: Role;
 
   @prop()

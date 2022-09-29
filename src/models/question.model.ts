@@ -37,6 +37,9 @@ export class Question extends TimeStamps {
 
   @prop({ type: () => [Answer], _id: false })
   answers: Answer[];
+
+  @prop({ type: () => [String] })
+  tags: string[];
 }
 
 export const questionSchema = buildSchema(Question);

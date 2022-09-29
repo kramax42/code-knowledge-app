@@ -6,7 +6,12 @@ import {
   IsBoolean,
   IsOptional,
   IsEnum,
+  ValidationArguments,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  Validate,
 } from 'class-validator';
+import { categories } from 'src/libs/constants/categories.constants';
 
 class AnswerDto {
   @IsString()
@@ -16,14 +21,17 @@ class AnswerDto {
   isCorrect: boolean;
 }
 
-export enum Categories {
-  JAVASCRIPT = 'javascript',
-  TYPESCRIPT = 'typescript',
-  NODEJS =     'nodejs',
+@ValidatorConstraint()
+export class IsCategory implements ValidatorConstraintInterface {
+  public async validate(category: string, args: ValidationArguments) {
+    return categories.includes(category);
+  }
 }
 
 export class CreateQuestionDto {
-  @IsEnum(Categories)
+  @Validate(IsCategory, {
+    message: 'Category should be valid string.'
+  })
   category: string;
 
   @IsString()

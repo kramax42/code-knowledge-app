@@ -10,19 +10,22 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { Roles } from 'src/libs/decorators/roles.decorator';
+import { RolesGuard } from 'src/libs/guards/roles.guard';
 import { CategoryValidationPipe } from 'src/libs/pipes/category-validation.pipe';
 import { IdValidationPipe } from 'src/libs/pipes/id-validation.pipe';
 import { PaginationParamsDto, RandomQuestionsDto } from 'src/libs/utils/pagination-params';
-import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { Role } from 'src/models/user.model';
+import { JwtAuthGuard } from '../../libs/guards/jwt.guard';
 import { CreateQuestionDto, UpdateQuestionDto } from './dto/question.dto';
 import { QUESTION_NOT_FOUND_ERROR } from './questions.constants';
 import { QuestionsService } from './questions.service';
+
 
 @Controller('questions')
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) { }
 
-  // @UseGuards(JwtAuthGuard)
   @Get(':category')
   async findAll(
     @Param('category', CategoryValidationPipe) category: string,
@@ -39,7 +42,6 @@ export class QuestionsController {
     return this.questionsService.findRandom(category, limit);
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Get()
   async getCategoriesSizes() {
     const sizes = await this.questionsService.getCategoriesSizes();
@@ -49,13 +51,14 @@ export class QuestionsController {
     return sizes;
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   async create(@Body() dto: CreateQuestionDto) {
     return this.questionsService.create(dto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+
   @Get(':id')
   async get(@Param('id', IdValidationPipe) id: string) {
     const question = await this.questionsService.findById(id);
@@ -65,7 +68,8 @@ export class QuestionsController {
     return question;
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
   async delete(@Param('id', IdValidationPipe) id: string) {
     const deletedQuestion = await this.questionsService.deleteById(id);
@@ -74,7 +78,8 @@ export class QuestionsController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Patch(':id')
   async patch(
     @Param('id', IdValidationPipe) id: string,

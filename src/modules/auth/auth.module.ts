@@ -8,6 +8,8 @@ import { User, userSchema } from 'src/models/user.model';
 import { AuthService } from './auth.service';
 import { JwtStratagy } from './strategies/jwt.stratagy';
 import { MongooseModule } from '@nestjs/mongoose';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from 'src/libs/guards/roles.guard';
 
 @Module({
   controllers: [AuthController],
@@ -21,6 +23,11 @@ import { MongooseModule } from '@nestjs/mongoose';
     }),
     PassportModule,
   ],
+  // providers: [AuthService, JwtStratagy, {
+  //   provide: APP_GUARD,
+  //   useClass: RolesGuard,
+  // }],
+
   providers: [AuthService, JwtStratagy],
 })
-export class AuthModule {}
+export class AuthModule { }
