@@ -37,6 +37,10 @@ export class CreateQuestionDto {
   @ValidateNested()
   @Type(() => AnswerDto)
   answers: AnswerDto[];
+
+  @IsArray()
+  @Type(() => String)
+  tags: String[];
 }
 
 export class UpdateQuestionDto {
@@ -57,4 +61,9 @@ export class UpdateQuestionDto {
   @ValidateNested()
   @Type(() => AnswerDto)
   answers: AnswerDto[];
+
+  @IsOptional()
+  @IsArray()
+  @Type(() => String)
+  tags: String[];
 }
