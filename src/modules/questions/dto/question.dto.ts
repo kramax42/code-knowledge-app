@@ -5,13 +5,11 @@ import {
   IsArray,
   IsBoolean,
   IsOptional,
-  IsEnum,
-  ValidationArguments,
-  ValidatorConstraint,
-  ValidatorConstraintInterface,
   Validate,
 } from 'class-validator';
-import { categories } from 'src/libs/constants/categories.constants';
+
+import { IsCategory } from '../../categories/validators/category.validator';
+
 
 class AnswerDto {
   @IsString()
@@ -21,12 +19,6 @@ class AnswerDto {
   isCorrect: boolean;
 }
 
-@ValidatorConstraint()
-export class IsCategory implements ValidatorConstraintInterface {
-  public async validate(category: string, args: ValidationArguments) {
-    return categories.includes(category);
-  }
-}
 
 export class CreateQuestionDto {
   @Validate(IsCategory, {

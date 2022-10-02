@@ -55,9 +55,9 @@ export class QuestionsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   async create(@Body() dto: CreateQuestionDto) {
-    return this.questionsService.create(dto);
+    const createdQuestion = await this.questionsService.create(dto);
+    return createdQuestion;
   }
-
 
   @Get(':id')
   async get(@Param('id', IdValidationPipe) id: string) {
