@@ -109,16 +109,18 @@ export class QuestionsService {
         await session.abortTransaction();
       }
       if (existedQuestion.category != dto.category) {
-        const categoryDoc = await this.categoriesService.decrementQuestionsAmount(existedQuestion.category);
+        let categoryDoc = await this.categoriesService.decrementQuestionsAmount(existedQuestion.category);
+        if (!categoryDoc) {
+          await session.abortTransaction();
+        }
+
+        categoryDoc = await this.categoriesService.incrementQuestionsAmount(dto.category);
         if (!categoryDoc) {
           await session.abortTransaction();
         }
       }
 
-      const categoryDoc = await this.categoriesService.incrementQuestionsAmount(dto.category);
-      if (!categoryDoc) {
-        await session.abortTransaction();
-      }
+
 
       updatedQuestion = this.questionModel.findByIdAndUpdate(id, dto, { new: true }).exec();
 

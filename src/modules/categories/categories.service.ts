@@ -21,6 +21,13 @@ export class CategoriesService {
     return record;
   }
 
+  async findAllCategoriesBySnippetsSizes() {
+    const record: Record<string, number> = {};
+    const categories = await this.categoryModel.find({});
+    categories.forEach(c => record[c.category] = c.snippetsAmount);
+    return record;
+  }
+
   async incrementQuestionsAmount(category: string) {
     const categoryDoc = await this.categoryModel.findOne({ category });
     if (categoryDoc) {
@@ -30,10 +37,28 @@ export class CategoriesService {
     return categoryDoc;
   }
 
+  async incrementSnippetsAmount(category: string) {
+    const categoryDoc = await this.categoryModel.findOne({ category });
+    if (categoryDoc) {
+      categoryDoc.snippetsAmount = categoryDoc.snippetsAmount + 1;
+      await categoryDoc.save();
+    }
+    return categoryDoc;
+  }
+
   async decrementQuestionsAmount(category: string) {
     const categoryDoc = await this.categoryModel.findOne({ category });
     if (categoryDoc) {
       categoryDoc.questionsAmount = categoryDoc.questionsAmount - 1;
+      await categoryDoc.save();
+    }
+    return categoryDoc;
+  }
+
+  async decrementSnippetsAmount(category: string) {
+    const categoryDoc = await this.categoryModel.findOne({ category });
+    if (categoryDoc) {
+      categoryDoc.snippetsAmount = categoryDoc.snippetsAmount - 1;
       await categoryDoc.save();
     }
     return categoryDoc;
