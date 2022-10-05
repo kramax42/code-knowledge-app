@@ -10,21 +10,37 @@ export class CategoriesService {
     private readonly categoryModel: ModelType<Category>) { }
 
   async findAllCategories() {
+    const record: Record<string, { categoryURLName: string }> = {};
     const categories = await this.categoryModel.find({});
-    return categories.map(c => c.category);
+    categories.forEach(category => {
+      record[category.category] = {
+        categoryURLName: category.categoryURLName
+      }
+    });
+    return record;
   }
 
   async findAllCategoriesByQuestionsSizes() {
-    const record: Record<string, number> = {};
+    const record: Record<string, { questionsAmount: number, categoryURLName: string }> = {};
     const categories = await this.categoryModel.find({});
-    categories.forEach(c => record[c.category] = c.questionsAmount);
+    categories.forEach(c => {
+      record[c.category] = {
+        questionsAmount: c.questionsAmount,
+        categoryURLName: c.categoryURLName
+      }
+    });
     return record;
   }
 
   async findAllCategoriesBySnippetsSizes() {
-    const record: Record<string, number> = {};
+    const record: Record<string, { snippetsAmount: number, categoryURLName: string }> = {};
     const categories = await this.categoryModel.find({});
-    categories.forEach(c => record[c.category] = c.snippetsAmount);
+    categories.forEach(c => {
+      record[c.category] = {
+        snippetsAmount: c.snippetsAmount,
+        categoryURLName: c.categoryURLName
+      }
+    });
     return record;
   }
 

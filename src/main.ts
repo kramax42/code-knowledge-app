@@ -5,7 +5,7 @@ import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { useContainer } from 'class-validator';
 import { QuestionsModule } from './modules/questions/questions.module';
-import { CategoriesModule } from './modules/categories/categories.module';
+import { CategoriesModule } from 'src/modules/categories/categories.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

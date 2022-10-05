@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { SnippetsController } from './snippets.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { IsCategory } from '../categories/validators/category.validator';
-import { CategoriesModule } from '../categories/categories.module';
+import { IsCategory } from 'src/libs/validators/category.validator';
+import { CategoriesModule } from 'src/modules/categories/categories.module';
 import { Snippet, snippetSchema } from 'src/models/snippet.model';
 import { SnippetsService } from './snippets.service';
 

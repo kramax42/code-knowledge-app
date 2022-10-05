@@ -6,6 +6,9 @@ export class Category extends TimeStamps {
   @prop({ unique: true })
   category: string;
 
+  @prop({ unique: true })
+  categoryURLName: string;
+
   @prop()
   questionsAmount: number;
 

@@ -7,8 +7,8 @@ import {
   IsOptional,
   Validate,
 } from 'class-validator';
+import { IsCategory } from 'src/libs/validators/category.validator';
 
-import { IsCategory } from '../../categories/validators/category.validator';
 
 
 export class CreateSnippetDto {

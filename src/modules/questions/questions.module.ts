@@ -3,8 +3,8 @@ import { QuestionsController } from './questions.controller';
 import { Question, questionSchema } from 'src/models/question.model';
 import { QuestionsService } from './questions.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { IsCategory } from '../categories/validators/category.validator';
-import { CategoriesModule } from '../categories/categories.module';
+import { IsCategory } from 'src/libs/validators/category.validator';
+import { CategoriesModule } from 'src/modules/categories/categories.module';
 
 @Module({
   controllers: [QuestionsController],

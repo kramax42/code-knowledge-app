@@ -3,7 +3,7 @@ import * as mongoose from 'mongoose';
 import { ModelType } from '@typegoose/typegoose/lib/types';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { CreateSnippetDto, UpdateSnippetDto } from './dto/snippet.dto';
-import { CategoriesService } from '../categories/categories.service';
+import { CategoriesService } from 'src/modules/categories/categories.service';
 import { Snippet } from 'src/models/snippet.model';
 
 @Injectable()
@@ -30,7 +30,6 @@ export class SnippetsService {
     const foundSnippets = await findQuery;
     return foundSnippets;
   }
-
 
   async create(dto: CreateSnippetDto) {
     const session: mongoose.ClientSession = await this.connection.startSession();
@@ -85,7 +84,6 @@ export class SnippetsService {
       session.endSession();
       return deletedSnippet;
     }
-
   }
 
   async updateById(id: string, dto: UpdateSnippetDto) {

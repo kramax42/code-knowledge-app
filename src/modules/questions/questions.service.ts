@@ -4,7 +4,7 @@ import { ModelType } from '@typegoose/typegoose/lib/types';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { CreateQuestionDto, UpdateQuestionDto } from './dto/question.dto';
 import { Question } from 'src/models/question.model';
-import { CategoriesService } from '../categories/categories.service';
+import { CategoriesService } from 'src/modules/categories/categories.service';
 
 @Injectable()
 export class QuestionsService {
@@ -55,7 +55,6 @@ export class QuestionsService {
         await session.abortTransaction();
       }
       await session.commitTransaction();
-
     } catch (error) {
       await session.abortTransaction();
       throw error;
@@ -63,7 +62,6 @@ export class QuestionsService {
       session.endSession();
       return createdQuestion;
     }
-
   }
 
   async findById(id: string) {
@@ -95,7 +93,6 @@ export class QuestionsService {
       session.endSession();
       return deletedQuestion;
     }
-
   }
 
   async updateById(id: string, dto: UpdateQuestionDto) {
@@ -119,8 +116,6 @@ export class QuestionsService {
           await session.abortTransaction();
         }
       }
-
-
 
       updatedQuestion = this.questionModel.findByIdAndUpdate(id, dto, { new: true }).exec();
 
