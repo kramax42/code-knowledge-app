@@ -3,12 +3,18 @@ import {
   IsString,
   ValidateNested,
   IsArray,
-  IsBoolean,
   IsOptional,
   Validate,
 } from 'class-validator';
 import { IsCategory } from 'src/libs/validators/category.validator';
 
+class InfoLinkDto {
+  @IsString()
+  link: string;
+
+  @IsString()
+  description: string;
+}
 
 
 export class CreateSnippetDto {
@@ -26,6 +32,11 @@ export class CreateSnippetDto {
   @IsArray()
   @Type(() => String)
   tags: string[];
+
+  @IsArray()
+  @ValidateNested()
+  @Type(() => InfoLinkDto)
+  infoLinks: InfoLinkDto[];
 }
 
 export class UpdateSnippetDto {
@@ -47,4 +58,10 @@ export class UpdateSnippetDto {
   @IsArray()
   @Type(() => String)
   tags: string[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested()
+  @Type(() => InfoLinkDto)
+  infoLinks: InfoLinkDto[];
 }

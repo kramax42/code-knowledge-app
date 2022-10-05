@@ -1,8 +1,15 @@
 import { buildSchema, modelOptions, prop } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 
-export interface Snippet extends Base { }
+class InfoLink {
+  @prop()
+  link: string;
 
+  @prop()
+  description: string;
+}
+
+export interface Snippet extends Base { }
 @modelOptions({
   schemaOptions: {
     // collection: 'Snippets',
@@ -29,6 +36,9 @@ export class Snippet extends TimeStamps {
 
   @prop({ type: () => [String] })
   tags: string[];
+
+  @prop({ type: () => [InfoLink], _id: false })
+  infoLinks: InfoLink[];
 }
 
 export const snippetSchema = buildSchema(Snippet);
