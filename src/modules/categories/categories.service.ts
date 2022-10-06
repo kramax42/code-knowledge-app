@@ -21,11 +21,11 @@ export class CategoriesService {
   }
 
   async findAllCategoriesByQuestionsSizes() {
-    const record: Record<string, { questionsAmount: number, categoryURLName: string }> = {};
+    const record: Record<string, { amount: number, categoryURLName: string }> = {};
     const categories = await this.categoryModel.find({});
     categories.forEach(c => {
       record[c.category] = {
-        questionsAmount: c.questionsAmount,
+        amount: c.questionsAmount,
         categoryURLName: c.categoryURLName
       }
     });
@@ -33,11 +33,11 @@ export class CategoriesService {
   }
 
   async findAllCategoriesBySnippetsSizes() {
-    const record: Record<string, { snippetsAmount: number, categoryURLName: string }> = {};
+    const record: Record<string, { amount: number, categoryURLName: string }> = {};
     const categories = await this.categoryModel.find({});
     categories.forEach(c => {
       record[c.category] = {
-        snippetsAmount: c.snippetsAmount,
+        amount: c.snippetsAmount,
         categoryURLName: c.categoryURLName
       }
     });
