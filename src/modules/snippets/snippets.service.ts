@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as mongoose from 'mongoose';
 import { ModelType } from '@typegoose/typegoose/lib/types';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { CreateSnippetDto, UpdateSnippetDto } from './dto/snippet.dto';
+import { CreateSnippetDto, UpdateSnippetDto } from '../../dtos/snippet.dto';
 import { CategoriesService } from 'src/modules/categories/categories.service';
 import { Snippet } from 'src/models/snippet.model';
 

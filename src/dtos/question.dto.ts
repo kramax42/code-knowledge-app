@@ -3,21 +3,12 @@ import {
   IsString,
   ValidateNested,
   IsArray,
-  IsBoolean,
   IsOptional,
   Validate,
 } from 'class-validator';
 import { IsCategory } from 'src/libs/validators/category.validator';
-
-
-
-class AnswerDto {
-  @IsString()
-  answer: string;
-
-  @IsBoolean()
-  isCorrect: boolean;
-}
+import { AnswerDto } from './answer.dto';
+import { InfoLinkDto } from './info-link.dto';
 
 
 export class CreateQuestionDto {
@@ -41,6 +32,11 @@ export class CreateQuestionDto {
   @IsArray()
   @Type(() => String)
   tags: String[];
+
+  @IsArray()
+  @ValidateNested()
+  @Type(() => InfoLinkDto)
+  infoLinks: InfoLinkDto[];
 }
 
 export class UpdateQuestionDto {
@@ -66,4 +62,9 @@ export class UpdateQuestionDto {
   @IsArray()
   @Type(() => String)
   tags: String[];
+
+  @IsArray()
+  @ValidateNested()
+  @Type(() => InfoLinkDto)
+  infoLinks: InfoLinkDto[];
 }

@@ -17,7 +17,7 @@ import { IdValidationPipe } from 'src/libs/pipes/id-validation.pipe';
 import { PaginationParamsDto, RandomQuestionsDto } from 'src/libs/utils/pagination-params';
 import { Role } from 'src/models/user.model';
 import { JwtAuthGuard } from '../../libs/guards/jwt.guard';
-import { CreateSnippetDto, UpdateSnippetDto } from './dto/snippet.dto';
+import { CreateSnippetDto, UpdateSnippetDto } from '../../dtos/snippet.dto';
 import { SNIPPET_NOT_FOUND_ERROR } from './snippets.constants';
 import { SnippetsService } from './snippets.service';
 

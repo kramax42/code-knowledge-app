@@ -1,5 +1,6 @@
 import { buildSchema, modelOptions, prop } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import { InfoLink, schemaOptions } from './common';
 
 class Answer {
   @prop()
@@ -11,20 +12,7 @@ class Answer {
 
 export interface Question extends Base { }
 
-@modelOptions({
-  schemaOptions: {
-    // collection: 'questions',
-    timestamps: true,
-    versionKey: false,
-    toJSON: {
-      transform: (doc, ret) => {
-        ret.id = ret._id;
-        delete ret._id;
-        delete ret.__v;
-      }
-    }
-  }
-})
+@modelOptions({ schemaOptions })
 export class Question extends TimeStamps {
   @prop()
   category: string;
@@ -38,8 +26,11 @@ export class Question extends TimeStamps {
   @prop({ type: () => [Answer], _id: false })
   answers: Answer[];
 
-  @prop({ type: () => [String] })
+  @prop({ type: () => [String], default: [] })
   tags: string[];
+
+  @prop({ type: () => [InfoLink], _id: false, default: [] })
+  infoLinks: InfoLink[];
 }
 
 export const questionSchema = buildSchema(Question);

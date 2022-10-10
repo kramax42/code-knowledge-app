@@ -1,23 +1,10 @@
 import { buildSchema, modelOptions, prop } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
-import { InfoLink } from './common';
+import { InfoLink, schemaOptions } from './common';
 
 
 export interface Snippet extends Base { }
-@modelOptions({
-  schemaOptions: {
-    // collection: 'Snippets',
-    timestamps: true,
-    versionKey: false,
-    toJSON: {
-      transform: (doc, ret) => {
-        ret.id = ret._id;
-        delete ret._id;
-        delete ret.__v;
-      }
-    }
-  }
-})
+@modelOptions({ schemaOptions })
 export class Snippet extends TimeStamps {
   @prop()
   category: string;
@@ -28,10 +15,10 @@ export class Snippet extends TimeStamps {
   @prop()
   description: string;
 
-  @prop({ type: () => [String] })
+  @prop({ type: () => [String], default: [] })
   tags: string[];
 
-  @prop({ type: () => [InfoLink], _id: false })
+  @prop({ type: () => [InfoLink], _id: false, default: [] })
   infoLinks: InfoLink[];
 }
 

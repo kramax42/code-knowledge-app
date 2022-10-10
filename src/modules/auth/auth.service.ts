@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ModelType } from '@typegoose/typegoose/lib/types';
 import { genSalt, hash, compare } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { SignUpDto } from './dto/auth.dto';
+import { SignUpDto } from '../../dtos/auth.dto';
 import { User } from 'src/models/user.model';
 import { USER_NOT_FOUND_ERROR, WRONG_PASSWORD_ERROR } from './auth.constants';
 import { InjectModel } from '@nestjs/mongoose';
@@ -22,7 +22,7 @@ export class AuthService {
       email: dto.email,
       passwordHash: await hash(dto.password, salt),
     });
-    
+
     return newUser.save();
   }
 

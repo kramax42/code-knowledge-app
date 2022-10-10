@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { ALREADY_REGISTERED_ERROR } from './auth.constants';
 import { AuthService } from './auth.service';
-import { SignUpDto, SignInDto } from './dto/auth.dto';
+import { SignUpDto, SignInDto } from '../../dtos/auth.dto';
 import { Request } from 'express';
 import { JwtAuthGuard } from '../../libs/guards/jwt.guard';
 import { RequestWithUser } from './interfaces/request-with-user';

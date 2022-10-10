@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as mongoose from 'mongoose';
 import { ModelType } from '@typegoose/typegoose/lib/types';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { CreateQuestionDto, UpdateQuestionDto } from './dto/question.dto';
+import { CreateQuestionDto, UpdateQuestionDto } from '../../dtos/question.dto';
 import { Question } from 'src/models/question.model';
 import { CategoriesService } from 'src/modules/categories/categories.service';
 

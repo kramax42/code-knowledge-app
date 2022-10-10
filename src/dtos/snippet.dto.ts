@@ -7,14 +7,7 @@ import {
   Validate,
 } from 'class-validator';
 import { IsCategory } from 'src/libs/validators/category.validator';
-
-class InfoLinkDto {
-  @IsString()
-  link: string;
-
-  @IsString()
-  description: string;
-}
+import { InfoLinkDto } from './info-link.dto';
 
 
 export class CreateSnippetDto {
