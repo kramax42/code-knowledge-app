@@ -32,6 +32,7 @@ async function bootstrap() {
       callback(null, true);
     },
     allowedHeaders: 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe',
+    // allowedHeaders: ['content-type'],
     methods: "GET,PUT,POST,PATCH,DELETE,UPDATE,OPTIONS",
     credentials: true,
   });

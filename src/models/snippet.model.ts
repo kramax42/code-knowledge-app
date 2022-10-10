@@ -1,13 +1,7 @@
 import { buildSchema, modelOptions, prop } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import { InfoLink } from './common';
 
-class InfoLink {
-  @prop()
-  link: string;
-
-  @prop()
-  description: string;
-}
 
 export interface Snippet extends Base { }
 @modelOptions({
