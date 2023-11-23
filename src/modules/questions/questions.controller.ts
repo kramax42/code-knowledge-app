@@ -14,17 +14,19 @@ import { Roles } from 'src/libs/decorators/roles.decorator';
 import { RolesGuard } from 'src/libs/guards/roles.guard';
 import { CategoryValidationPipe } from 'src/libs/pipes/category-validation.pipe';
 import { IdValidationPipe } from 'src/libs/pipes/id-validation.pipe';
-import { PaginationParamsDto, RandomQuestionsDto } from 'src/libs/utils/pagination-params';
+import {
+  PaginationParamsDto,
+  RandomQuestionsDto,
+} from 'src/libs/utils/pagination-params';
 import { Role } from 'src/models/user.model';
 import { JwtAuthGuard } from '../../libs/guards/jwt.guard';
 import { CreateQuestionDto, UpdateQuestionDto } from '../../dtos/question.dto';
 import { QUESTION_NOT_FOUND_ERROR } from './questions.constants';
 import { QuestionsService } from './questions.service';
 
-
 @Controller('questions')
 export class QuestionsController {
-  constructor(private readonly questionsService: QuestionsService) { }
+  constructor(private readonly questionsService: QuestionsService) {}
 
   @Get(':category')
   async findAll(

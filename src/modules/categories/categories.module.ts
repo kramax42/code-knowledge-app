@@ -8,9 +8,11 @@ import { CategoriesService } from './categories.service';
 @Module({
   controllers: [],
   imports: [
-    MongooseModule.forFeature([{ name: Category.name, schema: categorySchema }]),
+    MongooseModule.forFeature([
+      { name: Category.name, schema: categorySchema },
+    ]),
   ],
   providers: [IsCategory, CategoriesService],
-  exports: [CategoriesService]
+  exports: [CategoriesService],
 })
 export class CategoriesModule {}

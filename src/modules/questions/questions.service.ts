@@ -12,13 +12,10 @@ export class QuestionsService {
     @InjectModel(Question.name)
     private readonly questionModel: ModelType<Question>,
     private readonly categoriesService: CategoriesService,
-    @InjectConnection() private readonly connection: mongoose.Connection) { }
+    @InjectConnection() private readonly connection: mongoose.Connection,
+  ) {}
 
-  async findAll(
-    category: string,
-    skip = 0,
-    limit?: number,
-  ) {
+  async findAll(category: string, skip = 0, limit?: number) {
     const findQuery = this.questionModel
       .find({ category })
       .sort({ _id: 1 })
@@ -31,26 +28,25 @@ export class QuestionsService {
     return foundQuestions;
   }
 
-  async findRandom(
-    category: string,
-    limit: number,
-  ): Promise<Question[]> {
-    const randomQuestions = await this.questionModel.aggregate([
-      { $match: { category } },
-      { $sample: { size: limit } }
-    ]).exec()
+  async findRandom(category: string, limit: number): Promise<Question[]> {
+    const randomQuestions = await this.questionModel
+      .aggregate([{ $match: { category } }, { $sample: { size: limit } }])
+      .exec();
     return randomQuestions;
   }
 
   async create(dto: CreateQuestionDto) {
-    const session: mongoose.ClientSession = await this.connection.startSession();
+    const session: mongoose.ClientSession =
+      await this.connection.startSession();
 
     session.startTransaction();
     let createdQuestion = null;
     try {
       createdQuestion = await this.questionModel.create(dto);
 
-      const categoryDoc = await this.categoriesService.incrementQuestionsAmount(dto.category);
+      const categoryDoc = await this.categoriesService.incrementQuestionsAmount(
+        dto.category,
+      );
       if (!categoryDoc) {
         await session.abortTransaction();
       }
@@ -69,7 +65,8 @@ export class QuestionsService {
   }
 
   async deleteById(id: string) {
-    const session: mongoose.ClientSession = await this.connection.startSession();
+    const session: mongoose.ClientSession =
+      await this.connection.startSession();
 
     session.startTransaction();
     let deletedQuestion = null;
@@ -79,7 +76,9 @@ export class QuestionsService {
         await session.abortTransaction();
       }
 
-      const categoryDoc = await this.categoriesService.decrementQuestionsAmount(question.category);
+      const categoryDoc = await this.categoriesService.decrementQuestionsAmount(
+        question.category,
+      );
       deletedQuestion = await this.questionModel.findByIdAndDelete(id).exec();
 
       if (!categoryDoc) {
@@ -96,7 +95,8 @@ export class QuestionsService {
   }
 
   async updateById(id: string, dto: UpdateQuestionDto) {
-    const session: mongoose.ClientSession = await this.connection.startSession();
+    const session: mongoose.ClientSession =
+      await this.connection.startSession();
 
     session.startTransaction();
     let updatedQuestion = null;
@@ -106,18 +106,24 @@ export class QuestionsService {
         await session.abortTransaction();
       }
       if (existedQuestion.category != dto.category) {
-        let categoryDoc = await this.categoriesService.decrementQuestionsAmount(existedQuestion.category);
+        let categoryDoc = await this.categoriesService.decrementQuestionsAmount(
+          existedQuestion.category,
+        );
         if (!categoryDoc) {
           await session.abortTransaction();
         }
 
-        categoryDoc = await this.categoriesService.incrementQuestionsAmount(dto.category);
+        categoryDoc = await this.categoriesService.incrementQuestionsAmount(
+          dto.category,
+        );
         if (!categoryDoc) {
           await session.abortTransaction();
         }
       }
 
-      updatedQuestion = this.questionModel.findByIdAndUpdate(id, dto, { new: true }).exec();
+      updatedQuestion = this.questionModel
+        .findByIdAndUpdate(id, dto, { new: true })
+        .exec();
 
       await session.commitTransaction();
     } catch (error) {
@@ -137,7 +143,8 @@ export class QuestionsService {
     //   categoriesObj[category] = await this.questionModel.countDocuments({ category });
     // }))
 
-    const categoriesRecord = await this.categoriesService.findAllCategoriesByQuestionsSizes();
+    const categoriesRecord =
+      await this.categoriesService.findAllCategoriesByQuestionsSizes();
 
     return categoriesRecord;
   }

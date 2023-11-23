@@ -14,16 +14,29 @@ import { Roles } from 'src/libs/decorators/roles.decorator';
 import { RolesGuard } from 'src/libs/guards/roles.guard';
 import { CategoryValidationPipe } from 'src/libs/pipes/category-validation.pipe';
 import { IdValidationPipe } from 'src/libs/pipes/id-validation.pipe';
-import { PaginationParamsDto, RandomQuestionsDto } from 'src/libs/utils/pagination-params';
+import {
+  PaginationParamsDto,
+  RandomQuestionsDto,
+} from 'src/libs/utils/pagination-params';
 import { Role } from 'src/models/user.model';
 import { JwtAuthGuard } from '../../libs/guards/jwt.guard';
 import { CreateSnippetDto, UpdateSnippetDto } from '../../dtos/snippet.dto';
 import { SNIPPET_NOT_FOUND_ERROR } from './snippets.constants';
 import { SnippetsService } from './snippets.service';
+import { QueryBus } from '@nestjs/cqrs';
+import { GetHeroesQuery } from './queries/impl';
 
 @Controller('snippets')
 export class SnippetsController {
-  constructor(private readonly snippetsService: SnippetsService) { }
+  constructor(
+    private readonly snippetsService: SnippetsService,
+    private readonly queryBus: QueryBus,
+  ) {}
+
+  @Get('test')
+  async test(): Promise<string> {
+    return this.queryBus.execute(new GetHeroesQuery());
+  }
 
   @Get(':category')
   async findAll(

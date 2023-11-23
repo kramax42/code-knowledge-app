@@ -10,10 +10,9 @@ import { IsCategory } from 'src/libs/validators/category.validator';
 import { AnswerDto } from './answer.dto';
 import { InfoLinkDto } from './info-link.dto';
 
-
 export class CreateQuestionDto {
   @Validate(IsCategory, {
-    message: 'Category should be valid string.'
+    message: 'Category should be valid string.',
   })
   category: string;
 
@@ -31,7 +30,7 @@ export class CreateQuestionDto {
 
   @IsArray()
   @Type(() => String)
-  tags: String[];
+  tags: string[];
 
   @IsArray()
   @ValidateNested()
@@ -61,7 +60,7 @@ export class UpdateQuestionDto {
   @IsOptional()
   @IsArray()
   @Type(() => String)
-  tags: String[];
+  tags: string[];
 
   @IsArray()
   @ValidateNested()

@@ -7,39 +7,42 @@ import { Category } from 'src/models/category.model';
 export class CategoriesService {
   constructor(
     @InjectModel(Category.name)
-    private readonly categoryModel: ModelType<Category>) { }
+    private readonly categoryModel: ModelType<Category>,
+  ) {}
 
   async findAllCategories() {
     const record: Record<string, { categoryURLName: string }> = {};
     const categories = await this.categoryModel.find({});
-    categories.forEach(category => {
+    categories.forEach((category) => {
       record[category.category] = {
-        categoryURLName: category.categoryURLName
-      }
+        categoryURLName: category.categoryURLName,
+      };
     });
     return record;
   }
 
   async findAllCategoriesByQuestionsSizes() {
-    const record: Record<string, { amount: number, categoryURLName: string }> = {};
+    const record: Record<string, { amount: number; categoryURLName: string }> =
+      {};
     const categories = await this.categoryModel.find({});
-    categories.forEach(c => {
+    categories.forEach((c) => {
       record[c.category] = {
         amount: c.questionsAmount,
-        categoryURLName: c.categoryURLName
-      }
+        categoryURLName: c.categoryURLName,
+      };
     });
     return record;
   }
 
   async findAllCategoriesBySnippetsSizes() {
-    const record: Record<string, { amount: number, categoryURLName: string }> = {};
+    const record: Record<string, { amount: number; categoryURLName: string }> =
+      {};
     const categories = await this.categoryModel.find({});
-    categories.forEach(c => {
+    categories.forEach((c) => {
       record[c.category] = {
         amount: c.snippetsAmount,
-        categoryURLName: c.categoryURLName
-      }
+        categoryURLName: c.categoryURLName,
+      };
     });
     return record;
   }

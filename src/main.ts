@@ -19,7 +19,12 @@ async function bootstrap() {
 
   // Explanation of problem with CORS.
   // https://tutorialmeta.com/question/nest-js-is-giving-cors-error-even-when-cors-is-enabled
-  let whitelist = ['http://localhost:3000', 'https://test-code-knowledge.vercel.app', 'https://codeteko.vercel.app'];
+  const whitelist = [
+    'http://localhost:3000',
+    'http://localhost:8080',
+    'https://test-code-knowledge.vercel.app',
+    'https://codeteko.vercel.app',
+  ];
   app.enableCors({
     origin: function (origin, callback) {
       // if (whitelist.indexOf(origin) !== -1) {
@@ -31,9 +36,10 @@ async function bootstrap() {
       // }
       callback(null, true);
     },
-    allowedHeaders: 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe',
+    allowedHeaders:
+      'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe',
     // allowedHeaders: ['content-type'],
-    methods: "GET,PUT,POST,PATCH,DELETE,UPDATE,OPTIONS",
+    methods: 'GET,PUT,POST,PATCH,DELETE,UPDATE,OPTIONS',
     credentials: true,
   });
   app.use(helmet());

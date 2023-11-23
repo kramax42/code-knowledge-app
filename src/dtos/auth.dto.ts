@@ -8,7 +8,6 @@ export class SignInDto {
   password: string;
 }
 
-
 export class SignUpDto extends SignInDto {
   @IsString()
   name: string;

@@ -9,10 +9,9 @@ import {
 import { IsCategory } from 'src/libs/validators/category.validator';
 import { InfoLinkDto } from './info-link.dto';
 
-
 export class CreateSnippetDto {
   @Validate(IsCategory, {
-    message: 'Category should be valid string.'
+    message: 'Category should be valid string.',
   })
   category: string;
 
@@ -35,7 +34,7 @@ export class CreateSnippetDto {
 export class UpdateSnippetDto {
   @IsOptional()
   @Validate(IsCategory, {
-    message: 'Category should be valid string.'
+    message: 'Category should be valid string.',
   })
   category: string;
 

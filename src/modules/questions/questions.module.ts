@@ -10,8 +10,10 @@ import { CategoriesModule } from 'src/modules/categories/categories.module';
   controllers: [QuestionsController],
   imports: [
     CategoriesModule,
-    MongooseModule.forFeature([{ name: Question.name, schema: questionSchema }]),
+    MongooseModule.forFeature([
+      { name: Question.name, schema: questionSchema },
+    ]),
   ],
   providers: [IsCategory, QuestionsService],
 })
-export class QuestionsModule { }
+export class QuestionsModule {}

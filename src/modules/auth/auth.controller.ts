@@ -20,7 +20,7 @@ import { RequestWithUser } from './interfaces/request-with-user';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @UsePipes(new ValidationPipe())
   @Post('sign-up')
@@ -35,9 +35,17 @@ export class AuthController {
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
   @Post('sign-in')
-  async signIn(@Req() request: Request, @Body() { email, password }: SignInDto) {
-    const { email: validatedEmail } = await this.authService.validateUser(email, password);
-    const { cookie, accessToken } = await this.authService.getCookieAndToken(validatedEmail);
+  async signIn(
+    @Req() request: Request,
+    @Body() { email, password }: SignInDto,
+  ) {
+    const { email: validatedEmail } = await this.authService.validateUser(
+      email,
+      password,
+    );
+    const { cookie, accessToken } = await this.authService.getCookieAndToken(
+      validatedEmail,
+    );
     request.res.setHeader('Set-Cookie', cookie);
     request.res.send(accessToken);
   }
@@ -52,16 +60,17 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async authMe(@Req() request: RequestWithUser) {
-    const user = request.user
-    const { accessToken } = await this.authService.getCookieAndToken(user.email);
-    return (
-      {
-        user: {
-          email: user.email,
-          name: user.name,
-          role: user.role
-        },
-        accessToken
-      });
+    const user = request.user;
+    const { accessToken } = await this.authService.getCookieAndToken(
+      user.email,
+    );
+    return {
+      user: {
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
+      accessToken,
+    };
   }
 }

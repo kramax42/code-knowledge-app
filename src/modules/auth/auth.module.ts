@@ -30,4 +30,4 @@ import { RolesGuard } from 'src/libs/guards/roles.guard';
 
   providers: [AuthService, JwtStratagy],
 })
-export class AuthModule { }
+export class AuthModule {}

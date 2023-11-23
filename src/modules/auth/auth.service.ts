@@ -13,8 +13,8 @@ export class AuthService {
   constructor(
     @InjectModel(User.name) private readonly userModel: ModelType<User>,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService
-  ) { }
+    private readonly configService: ConfigService,
+  ) {}
 
   async createUser(dto: SignUpDto) {
     const salt = await genSalt(10);
@@ -49,23 +49,24 @@ export class AuthService {
     const payload = { email };
     const accessToken = await this.jwtService.signAsync(payload, {
       secret: this.configService.get('JWT_SECRET'),
-      expiresIn: `${this.configService.get('JWT_EXPIRATION_TIME')}s`
+      expiresIn: `${this.configService.get('JWT_EXPIRATION_TIME')}s`,
     });
     return {
-      accessToken
+      accessToken,
     };
   }
 
   async getCookieAndToken(email: string) {
     const { accessToken } = await this.getAccessToken(email);
     // const cookie = `Authorization=Bearer ${accessToken}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`;
-    const cookie = `Authorization=Bearer ${accessToken}; HttpOnly; SameSite=None; Secure; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`;
+    const cookie = `Authorization=Bearer ${accessToken}; HttpOnly; SameSite=None; Secure; Path=/; Max-Age=${this.configService.get(
+      'JWT_EXPIRATION_TIME',
+    )}`;
     return {
       cookie,
       accessToken,
     };
   }
-
 
   getCookieForLogOut() {
     return `Authorization=; HttpOnly; SameSite=None; Secure; Path=/; Max-Age=0`;

@@ -5,6 +5,10 @@ import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { CreateSnippetDto, UpdateSnippetDto } from '../../dtos/snippet.dto';
 import { CategoriesService } from 'src/modules/categories/categories.service';
 import { Snippet } from 'src/models/snippet.model';
+import { CommandBus } from '@nestjs/cqrs';
+import { KillDragonCommand } from './kill-dragon.command';
+
+
 
 @Injectable()
 export class SnippetsService {
@@ -12,13 +16,18 @@ export class SnippetsService {
     @InjectModel(Snippet.name)
     private readonly snippetModel: ModelType<Snippet>,
     private readonly categoriesService: CategoriesService,
-    @InjectConnection() private readonly connection: mongoose.Connection) { }
+    @InjectConnection() private readonly connection: mongoose.Connection,
+    // private commandBus: CommandBus,
+  ) {}
 
-  async findAll(
-    category: string,
-    skip = 0,
-    limit?: number,
-  ) {
+
+  // async killDragon(heroId: string, killDragonDto: KillDragonDto) {
+  //   return this.commandBus.execute(
+  //     new KillDragonCommand(heroId, killDragonDto.dragonId)
+  //   );
+  // }
+
+  async findAll(category: string, skip = 0, limit?: number) {
     const findQuery = this.snippetModel
       .find({ category })
       .sort({ _id: 1 })
@@ -32,19 +41,21 @@ export class SnippetsService {
   }
 
   async create(dto: CreateSnippetDto) {
-    const session: mongoose.ClientSession = await this.connection.startSession();
+    const session: mongoose.ClientSession =
+      await this.connection.startSession();
 
     session.startTransaction();
     let createdSnippet = null;
     try {
       createdSnippet = await this.snippetModel.create(dto);
 
-      const categoryDoc = await this.categoriesService.incrementSnippetsAmount(dto.category);
+      const categoryDoc = await this.categoriesService.incrementSnippetsAmount(
+        dto.category,
+      );
       if (!categoryDoc) {
         await session.abortTransaction();
       }
       await session.commitTransaction();
-
     } catch (error) {
       await session.abortTransaction();
       throw error;
@@ -52,7 +63,6 @@ export class SnippetsService {
       session.endSession();
       return createdSnippet;
     }
-
   }
 
   async findById(id: string) {
@@ -60,7 +70,8 @@ export class SnippetsService {
   }
 
   async deleteById(id: string) {
-    const session: mongoose.ClientSession = await this.connection.startSession();
+    const session: mongoose.ClientSession =
+      await this.connection.startSession();
 
     session.startTransaction();
     let deletedSnippet = null;
@@ -70,7 +81,9 @@ export class SnippetsService {
         await session.abortTransaction();
       }
 
-      const categoryDoc = await this.categoriesService.decrementSnippetsAmount(snippet.category);
+      const categoryDoc = await this.categoriesService.decrementSnippetsAmount(
+        snippet.category,
+      );
       deletedSnippet = await this.snippetModel.findByIdAndDelete(id).exec();
 
       if (!categoryDoc) {
@@ -87,7 +100,8 @@ export class SnippetsService {
   }
 
   async updateById(id: string, dto: UpdateSnippetDto) {
-    const session: mongoose.ClientSession = await this.connection.startSession();
+    const session: mongoose.ClientSession =
+      await this.connection.startSession();
 
     session.startTransaction();
     let updatedSnippet = null;
@@ -97,18 +111,24 @@ export class SnippetsService {
         await session.abortTransaction();
       }
       if (existedSnippet.category != dto.category) {
-        let categoryDoc = await this.categoriesService.decrementSnippetsAmount(existedSnippet.category);
+        let categoryDoc = await this.categoriesService.decrementSnippetsAmount(
+          existedSnippet.category,
+        );
         if (!categoryDoc) {
           await session.abortTransaction();
         }
 
-        categoryDoc = await this.categoriesService.incrementSnippetsAmount(dto.category);
+        categoryDoc = await this.categoriesService.incrementSnippetsAmount(
+          dto.category,
+        );
         if (!categoryDoc) {
           await session.abortTransaction();
         }
       }
 
-      updatedSnippet = this.snippetModel.findByIdAndUpdate(id, dto, { new: true }).exec();
+      updatedSnippet = this.snippetModel
+        .findByIdAndUpdate(id, dto, { new: true })
+        .exec();
 
       await session.commitTransaction();
     } catch (error) {
@@ -121,7 +141,8 @@ export class SnippetsService {
   }
 
   async getCategoriesSizes() {
-    const categoriesRecord = await this.categoriesService.findAllCategoriesBySnippetsSizes();
+    const categoriesRecord =
+      await this.categoriesService.findAllCategoriesBySnippetsSizes();
     return categoriesRecord;
   }
 }

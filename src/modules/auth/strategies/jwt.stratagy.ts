@@ -8,14 +8,18 @@ import { AuthService } from '../auth.service';
 
 @Injectable()
 export class JwtStratagy extends PassportStrategy(Strategy) {
-  constructor(private readonly configService: ConfigService,
-    private readonly authService: AuthService) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly authService: AuthService,
+  ) {
     super({
       // jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      jwtFromRequest: ExtractJwt.fromExtractors([(request: Request) => {
-        // 'Bearer ..token..' => '..token..'
-        return request?.cookies?.Authorization?.split(' ')[1];
-      }]),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (request: Request) => {
+          // 'Bearer ..token..' => '..token..'
+          return request?.cookies?.Authorization?.split(' ')[1];
+        },
+      ]),
       secretOrKey: configService.get('JWT_SECRET'),
     });
   }
@@ -23,5 +27,4 @@ export class JwtStratagy extends PassportStrategy(Strategy) {
   async validate({ email }: Pick<User, 'email'>) {
     return this.authService.findUser(email);
   }
-
 }
