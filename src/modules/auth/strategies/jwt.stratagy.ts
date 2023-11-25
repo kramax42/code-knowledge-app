@@ -20,7 +20,8 @@ export class JwtStratagy extends PassportStrategy(Strategy) {
           return request?.cookies?.Authorization?.split(' ')[1];
         },
       ]),
-      secretOrKey: configService.get('JWT_SECRET'),
+      // secretOrKey: configService.get('JWT_SECRET'),
+      secretOrKey: 'JWT_SECRET',
     });
   }
 
