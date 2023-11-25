@@ -4,8 +4,7 @@ import { GetHeroesQuery } from '../impl';
 
 @QueryHandler(GetHeroesQuery)
 export class GetHeroesHandler implements IQueryHandler<GetHeroesQuery> {
-  //   constructor(private readonly repository: HeroRepository) {}
-  //   constructor() {}
+  
 
   async execute(query: GetHeroesQuery) {
     // console.log(clc.yellowBright('Async GetHeroesQuery...'));

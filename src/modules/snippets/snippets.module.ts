@@ -7,6 +7,7 @@ import { Snippet, snippetSchema } from 'src/models/snippet.model';
 import { SnippetsService } from './snippets.service';
 import { CqrsModule } from '@nestjs/cqrs';
 import { QueryHandlers } from './queries/handlers';
+import { SnippetsRepository } from './snippets.repository';
 
 @Module({
   controllers: [SnippetsController],
@@ -15,6 +16,11 @@ import { QueryHandlers } from './queries/handlers';
     CategoriesModule,
     MongooseModule.forFeature([{ name: Snippet.name, schema: snippetSchema }]),
   ],
-  providers: [IsCategory, SnippetsService, ...QueryHandlers],
+  providers: [
+    IsCategory,
+    SnippetsService,
+    SnippetsRepository,
+    ...QueryHandlers,
+  ],
 })
 export class SnippetsModule {}

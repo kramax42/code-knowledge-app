@@ -8,7 +8,7 @@ import { QuestionsModule } from './modules/questions/questions.module';
 import { CategoriesModule } from 'src/modules/categories/categories.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   // For injecting services in class-validator constraint interface.
   useContainer(app.select(CategoriesModule), { fallbackOnErrors: true });
@@ -27,15 +27,16 @@ async function bootstrap() {
   ];
   app.enableCors({
     origin: function (origin, callback) {
-      // if (whitelist.indexOf(origin) !== -1) {
-      //   console.log("allowed cors for:", origin)
-      //   callback(null, true)
-      // } else {
-      //   console.log("blocked cors for:", origin)
-      //   callback(new Error('Not allowed by CORS'))
-      // }
+      if (whitelist.indexOf(origin) !== -1) {
+        console.log('allowed cors for:', origin);
+        callback(null, true);
+      } else {
+        console.log('blocked cors for:', origin);
+        callback(new Error('Not allowed by CORS'));
+      }
       callback(null, true);
     },
+    // origin: whitelist,
     allowedHeaders:
       'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe',
     // allowedHeaders: ['content-type'],

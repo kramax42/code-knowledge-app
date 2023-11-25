@@ -14,27 +14,26 @@ import { Roles } from 'src/libs/decorators/roles.decorator';
 import { RolesGuard } from 'src/libs/guards/roles.guard';
 import { CategoryValidationPipe } from 'src/libs/pipes/category-validation.pipe';
 import { IdValidationPipe } from 'src/libs/pipes/id-validation.pipe';
-import {
-  PaginationParamsDto,
-  RandomQuestionsDto,
-} from 'src/libs/utils/pagination-params';
+import { PaginationParamsDto } from 'src/libs/utils/pagination-params';
 import { Role } from 'src/models/user.model';
 import { JwtAuthGuard } from '../../libs/guards/jwt.guard';
 import { CreateSnippetDto, UpdateSnippetDto } from '../../dtos/snippet.dto';
 import { SNIPPET_NOT_FOUND_ERROR } from './snippets.constants';
 import { SnippetsService } from './snippets.service';
 import { QueryBus } from '@nestjs/cqrs';
-import { GetHeroesQuery } from './queries/impl';
+import { GetHeroesQuery, GetSnippetsQuery } from './queries/impl';
+import { CategoriesService } from '../categories/categories.service';
 
 @Controller('snippets')
 export class SnippetsController {
   constructor(
+    private readonly categoriesService: CategoriesService,
     private readonly snippetsService: SnippetsService,
     private readonly queryBus: QueryBus,
   ) {}
 
   @Get('test')
-  async test(): Promise<string> {
+  async test() {
     return this.queryBus.execute(new GetHeroesQuery());
   }
 
@@ -43,15 +42,18 @@ export class SnippetsController {
     @Param('category', CategoryValidationPipe) category: string,
     @Query() { skip, limit }: PaginationParamsDto,
   ) {
-    return this.snippetsService.findAll(category, skip, limit);
+    return this.queryBus.execute(new GetSnippetsQuery(category, skip, limit));
   }
 
   @Get()
   async getCategoriesSizes() {
-    const sizes = await this.snippetsService.getCategoriesSizes();
+    const sizes =
+      await this.categoriesService.findAllCategoriesBySnippetsSizes();
+
     if (!sizes) {
       throw new NotFoundException(SNIPPET_NOT_FOUND_ERROR);
     }
+
     return sizes;
   }
 
@@ -60,6 +62,7 @@ export class SnippetsController {
   @Post()
   async create(@Body() dto: CreateSnippetDto) {
     const createdSnippet = await this.snippetsService.create(dto);
+
     return createdSnippet;
   }
 
@@ -69,6 +72,7 @@ export class SnippetsController {
     if (!snippet) {
       throw new NotFoundException(SNIPPET_NOT_FOUND_ERROR);
     }
+
     return snippet;
   }
 
