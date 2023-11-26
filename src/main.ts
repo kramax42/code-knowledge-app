@@ -4,8 +4,9 @@ import { AppModule } from './modules/app/app.module';
 import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { useContainer } from 'class-validator';
-import { QuestionsModule } from './modules/questions/questions.module';
 import { CategoriesModule } from 'src/modules/categories/categories.module';
+import supertokens from 'supertokens-node';
+import { SupertokensExceptionFilter } from './modules/auth-super-tokens/auth-super-tokens.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -33,6 +34,34 @@ async function bootstrap() {
   //   next();
   // });
 
+  // app.enableCors({
+  //   // origin: function (origin, callback) {
+  //   //   if (whitelist.indexOf(origin) !== -1) {
+  //   //     console.log('allowed cors for:', origin);
+  //   //     callback(null, true);
+  //   //   } else {
+  //   //     console.log('blocked cors for:', origin);
+  //   //     callback(new Error('Not allowed by CORS'));
+  //   //   }
+  //   //   callback(null, true);
+  //   // },
+  //   origin: whitelist,
+
+  //   // allowedHeaders:
+  //   //   'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe',
+  //   allowedHeaders: [
+  //     'Content-Type',
+  //     'Origin',
+  //     'X-Requested-With',
+  //     'Accept',
+  //     'Authorization',
+  //   ],
+  //   // headers exposed to the client
+  //   exposedHeaders: ['Authorization'],
+  //   methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE', 'UPDATE', 'OPTIONS'],
+  //   credentials: true,
+  // });
+
   app.enableCors({
     // origin: function (origin, callback) {
     //   if (whitelist.indexOf(origin) !== -1) {
@@ -48,18 +77,11 @@ async function bootstrap() {
 
     // allowedHeaders:
     //   'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe',
-    allowedHeaders: [
-      'Content-Type',
-      'Origin',
-      'X-Requested-With',
-      'Accept',
-      'Authorization',
-    ],
-    // headers exposed to the client
-    exposedHeaders: ['Authorization'],
-    methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE', 'UPDATE', 'OPTIONS'],
+    allowedHeaders: ['content-type', ...supertokens.getAllCORSHeaders()],
     credentials: true,
   });
+
+  app.useGlobalFilters(new SupertokensExceptionFilter());
   app.use(helmet());
   await app.listen(3010);
 }
