@@ -23,8 +23,8 @@ export class CategoriesService {
     return record;
   }
 
-  async findAllCategoriesBySnippetsSizes() {
-    return this.categoriesRepository.findAllCategoriesBySnippetsSizes();
+  async getSnippetCategoriesSizes() {
+    return this.categoriesRepository.getSnippetCategoriesSizes();
   }
 
   async findAllCategoriesByQuestionsSizes() {

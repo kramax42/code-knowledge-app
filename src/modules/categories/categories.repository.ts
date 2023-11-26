@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ModelType } from '@typegoose/typegoose/lib/types';
 import { Category } from 'src/models/category.model';
+import { ItemCategoriesSizes } from './categories.types';
 
 @Injectable()
 export class CategoriesRepository {
@@ -28,16 +29,29 @@ export class CategoriesRepository {
     return categoryDoc;
   }
 
-  async findAllCategoriesBySnippetsSizes() {
-    const record: Record<string, { amount: number; categoryURLName: string }> =
-      {};
+  async getSnippetCategoriesSizes() {
+    // const record: ItemCategoriesSizes = {};
     const categories = await this.categoryModel.find({});
-    categories.forEach((c) => {
-      record[c.category] = {
-        amount: c.snippetsAmount,
-        categoryURLName: c.categoryURLName,
+    // categories.forEach(({ category, snippetsAmount, categoryURLName }) => {
+    //   record[category] = {
+    //     amount: snippetsAmount,
+    //     categoryURLName,
+    //   };
+    // });
+
+    // return record;
+
+    // TODO: move to service
+    return categories.reduce((accumulator, current) => {
+      const { category, snippetsAmount, categoryURLName } = current;
+
+      return {
+        ...accumulator,
+        [category]: {
+          amount: snippetsAmount,
+          categoryURLName,
+        },
       };
-    });
-    return record;
+    }, {} as ItemCategoriesSizes);
   }
 }

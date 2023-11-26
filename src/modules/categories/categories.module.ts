@@ -4,6 +4,7 @@ import { IsCategory } from 'src/libs/validators/category.validator';
 import { Category, categorySchema } from 'src/models/category.model';
 import { CategoriesService } from './categories.service';
 import { CategoriesRepository } from './categories.repository';
+import { QueryHandlers } from './queries/handlers';
 
 @Module({
   controllers: [],
@@ -12,7 +13,12 @@ import { CategoriesRepository } from './categories.repository';
       { name: Category.name, schema: categorySchema },
     ]),
   ],
-  providers: [IsCategory, CategoriesService, CategoriesRepository],
+  providers: [
+    IsCategory,
+    CategoriesService,
+    CategoriesRepository,
+    ...QueryHandlers,
+  ],
   exports: [CategoriesService, CategoriesRepository],
 })
 export class CategoriesModule {}

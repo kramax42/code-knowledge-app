@@ -21,8 +21,9 @@ import { CreateSnippetDto, UpdateSnippetDto } from '../../dtos/snippet.dto';
 import { SNIPPET_NOT_FOUND_ERROR } from './snippets.constants';
 import { SnippetsService } from './snippets.service';
 import { QueryBus } from '@nestjs/cqrs';
-import { GetHeroesQuery, GetSnippetsQuery } from './queries/impl';
+import { GetSnippetsQuery } from './queries/impl';
 import { CategoriesService } from '../categories/categories.service';
+import { GetSnippetCategoriesSizesQuery } from '../categories/queries/impl';
 
 @Controller('snippets')
 export class SnippetsController {
@@ -31,11 +32,6 @@ export class SnippetsController {
     private readonly snippetsService: SnippetsService,
     private readonly queryBus: QueryBus,
   ) {}
-
-  @Get('test')
-  async test() {
-    return this.queryBus.execute(new GetHeroesQuery());
-  }
 
   @Get(':category')
   async findAll(
@@ -47,8 +43,18 @@ export class SnippetsController {
 
   @Get()
   async getCategoriesSizes() {
-    const sizes =
-      await this.categoriesService.findAllCategoriesBySnippetsSizes();
+    type T = Record<
+      string,
+      {
+        amount: number;
+        categoryURLName: string;
+      }
+    >;
+
+    const sizes = await this.queryBus.execute<
+      GetSnippetCategoriesSizesQuery,
+      T
+    >(new GetSnippetCategoriesSizesQuery());
 
     if (!sizes) {
       throw new NotFoundException(SNIPPET_NOT_FOUND_ERROR);
