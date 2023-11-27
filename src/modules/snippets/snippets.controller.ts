@@ -22,13 +22,12 @@ import { SNIPPET_NOT_FOUND_ERROR } from './snippets.constants';
 import { SnippetsService } from './snippets.service';
 import { QueryBus } from '@nestjs/cqrs';
 import { GetSnippetsQuery } from './queries/impl';
-import { CategoriesService } from '../categories/categories.service';
 import { GetSnippetCategoriesSizesQuery } from '../categories/queries/impl';
+import { ItemCategoriesSizes } from '../categories/categories.types';
 
 @Controller('snippets')
 export class SnippetsController {
   constructor(
-    private readonly categoriesService: CategoriesService,
     private readonly snippetsService: SnippetsService,
     private readonly queryBus: QueryBus,
   ) {}
@@ -43,17 +42,9 @@ export class SnippetsController {
 
   @Get()
   async getCategoriesSizes() {
-    type T = Record<
-      string,
-      {
-        amount: number;
-        categoryURLName: string;
-      }
-    >;
-
     const sizes = await this.queryBus.execute<
       GetSnippetCategoriesSizesQuery,
-      T
+      ItemCategoriesSizes
     >(new GetSnippetCategoriesSizesQuery());
 
     if (!sizes) {

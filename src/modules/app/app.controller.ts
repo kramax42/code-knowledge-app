@@ -14,6 +14,7 @@ export class AppController {
   async getTest(@Session() session: SessionContainer): Promise<string> {
     // TODO: magic
     // session.
+    // session.getClaimValue();
     return 'magic';
   }
 

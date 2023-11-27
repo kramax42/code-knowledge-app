@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import supertokens from 'supertokens-node';
 import Session from 'supertokens-node/recipe/session';
 import ThirdPartyEmailPassword from 'supertokens-node/recipe/thirdpartyemailpassword';
+import Dashboard from 'supertokens-node/recipe/dashboard';
 
 import {
   ConfigInjectionToken,
@@ -20,6 +21,7 @@ export class AuthSuperTokensService {
         apiKey: config.apiKey,
       },
       recipeList: [
+        Dashboard.init(),
         ThirdPartyEmailPassword.init({
           // We have provided you with development keys which you can use for testing.
           // IMPORTANT: Please replace them with your own OAuth keys for production use.
