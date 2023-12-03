@@ -3,6 +3,7 @@ import supertokens from 'supertokens-node';
 import Session from 'supertokens-node/recipe/session';
 import ThirdPartyEmailPassword from 'supertokens-node/recipe/thirdpartyemailpassword';
 import Dashboard from 'supertokens-node/recipe/dashboard';
+import UserRoles from 'supertokens-node/recipe/userroles';
 
 import {
   ConfigInjectionToken,
@@ -22,6 +23,7 @@ export class AuthSuperTokensService {
       },
       recipeList: [
         Dashboard.init(),
+        UserRoles.init(),
         ThirdPartyEmailPassword.init({
           // We have provided you with development keys which you can use for testing.
           // IMPORTANT: Please replace them with your own OAuth keys for production use.
@@ -43,8 +45,8 @@ export class AuthSuperTokensService {
                 thirdPartyId: 'github',
                 clients: [
                   {
-                    clientId: '467101b197249757c71f',
-                    clientSecret: 'e97051221f4b6426e8fe8d51486396703012f5bd',
+                    clientId: process.env.GITHUB_CLIENT_ID,
+                    clientSecret: process.env.GITHUB_CLIENT_SECRET,
                   },
                 ],
               },
@@ -67,7 +69,11 @@ export class AuthSuperTokensService {
             },
           ],
         }),
-        Session.init(),
+        // Session.init(),
+        Session.init({
+          getTokenTransferMethod: () => 'header',
+          // tokenTransferMethod: "header" // or "cookie"
+        }),
       ],
     });
   }

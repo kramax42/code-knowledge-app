@@ -10,13 +10,10 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { Roles } from 'src/libs/decorators/roles.decorator';
-import { RolesGuard } from 'src/libs/guards/roles.guard';
 import { CategoryValidationPipe } from 'src/libs/pipes/category-validation.pipe';
 import { IdValidationPipe } from 'src/libs/pipes/id-validation.pipe';
 import { PaginationParamsDto } from 'src/libs/utils/pagination-params';
-import { Role } from 'src/models/user.model';
-import { JwtAuthGuard } from '../../libs/guards/jwt.guard';
+
 import { CreateSnippetDto, UpdateSnippetDto } from '../../dtos/snippet.dto';
 import { SNIPPET_NOT_FOUND_ERROR } from './snippets.constants';
 import { SnippetsService } from './snippets.service';
@@ -24,6 +21,8 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetSnippetsQuery } from './queries/impl';
 import { GetSnippetCategoriesSizesQuery } from '../categories/queries/impl';
 import { ItemCategoriesSizes } from '../categories/categories.types';
+import { AuthSuperTokensGuard } from '../auth-super-tokens/auth-super-tokens.guard';
+import { getAdminRoleValidator } from '../auth-super-tokens/auth-super-tokens.util';
 
 @Controller('snippets')
 export class SnippetsController {
@@ -54,10 +53,13 @@ export class SnippetsController {
     return sizes;
   }
 
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles(Role.Admin)
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(new AuthSuperTokensGuard(getAdminRoleValidator()))
   @Post()
   async create(@Body() dto: CreateSnippetDto) {
+    console.log('admin create snippet');
+
     const createdSnippet = await this.snippetsService.create(dto);
 
     return createdSnippet;
@@ -73,8 +75,9 @@ export class SnippetsController {
     return snippet;
   }
 
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles(Role.Admin)
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(new AuthSuperTokensGuard(getAdminRoleValidator()))
   @Delete(':id')
   async delete(@Param('id', IdValidationPipe) id: string) {
     const deletedSnippet = await this.snippetsService.deleteById(id);
@@ -83,8 +86,9 @@ export class SnippetsController {
     }
   }
 
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles(Role.Admin)
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(new AuthSuperTokensGuard(getAdminRoleValidator()))
   @Patch(':id')
   async patch(
     @Param('id', IdValidationPipe) id: string,

@@ -10,19 +10,21 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { Roles } from 'src/libs/decorators/roles.decorator';
-import { RolesGuard } from 'src/libs/guards/roles.guard';
+// import { Roles } from 'src/libs/decorators/roles.decorator';
+// import { RolesGuard } from 'src/libs/guards/roles.guard';
 import { CategoryValidationPipe } from 'src/libs/pipes/category-validation.pipe';
 import { IdValidationPipe } from 'src/libs/pipes/id-validation.pipe';
 import {
   PaginationParamsDto,
   RandomQuestionsDto,
 } from 'src/libs/utils/pagination-params';
-import { Role } from 'src/models/user.model';
-import { JwtAuthGuard } from '../../libs/guards/jwt.guard';
+// import { Role } from 'src/models/user.model';
+// import { JwtAuthGuard } from '../../libs/guards/jwt.guard';
 import { CreateQuestionDto, UpdateQuestionDto } from '../../dtos/question.dto';
 import { QUESTION_NOT_FOUND_ERROR } from './questions.constants';
 import { QuestionsService } from './questions.service';
+import { getAdminRoleValidator } from '../auth-super-tokens/auth-super-tokens.util';
+import { AuthSuperTokensGuard } from '../auth-super-tokens/auth-super-tokens.guard';
 
 @Controller('questions')
 export class QuestionsController {
@@ -53,11 +55,15 @@ export class QuestionsController {
     return sizes;
   }
 
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles(Role.Admin)
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(new AuthSuperTokensGuard(getAdminRoleValidator()))
   @Post()
   async create(@Body() dto: CreateQuestionDto) {
+    console.log('admin create question');
+
     const createdQuestion = await this.questionsService.create(dto);
+
     return createdQuestion;
   }
 
@@ -70,8 +76,9 @@ export class QuestionsController {
     return question;
   }
 
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles(Role.Admin)
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(new AuthSuperTokensGuard(getAdminRoleValidator()))
   @Delete(':id')
   async delete(@Param('id', IdValidationPipe) id: string) {
     const deletedQuestion = await this.questionsService.deleteById(id);
@@ -80,8 +87,9 @@ export class QuestionsController {
     }
   }
 
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles(Role.Admin)
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(new AuthSuperTokensGuard(getAdminRoleValidator()))
   @Patch(':id')
   async patch(
     @Param('id', IdValidationPipe) id: string,

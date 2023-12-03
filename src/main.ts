@@ -82,7 +82,27 @@ async function bootstrap() {
   });
 
   app.useGlobalFilters(new SupertokensExceptionFilter());
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          imgSrc: ['https://cdn.jsdelivr.net/gh/supertokens/'],
+          scriptSrc: [
+            `'self'`,
+            `'unsafe-inline'`,
+            'https://cdn.jsdelivr.net/gh/supertokens/',
+          ],
+          // manifestSrc: [`'self'`, 'apollo-server-landing-page.cdn.apollographql.com'],
+          // frameSrc: [`'self'`, 'sandbox.embed.apollographql.com'],
+        },
+      },
+    }),
+  );
+
+  // to solve supertokens dashboar csp error:
+  // https://github.com/graphql/graphql-playground/issues/1283
+  // app.use(helmet({ contentSecurityPolicy: (process.env.NODE_ENV === 'production') ? undefined : false }));
+
   await app.listen(3010);
 }
 bootstrap();

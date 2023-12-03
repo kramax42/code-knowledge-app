@@ -18,7 +18,7 @@ import { Request } from 'express';
 import { JwtAuthGuard } from '../../libs/guards/jwt.guard';
 import { RequestWithUser } from './interfaces/request-with-user';
 
-@Controller('auth')
+@Controller('auth9')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -43,9 +43,8 @@ export class AuthController {
       email,
       password,
     );
-    const { cookie, accessToken } = await this.authService.getCookieAndToken(
-      validatedEmail,
-    );
+    const { cookie, accessToken } =
+      await this.authService.getCookieAndToken(validatedEmail);
     request.res.setHeader('Set-Cookie', cookie);
     request.res.send(accessToken);
   }
